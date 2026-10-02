@@ -1,0 +1,22 @@
+{
+  "2026-10-06": {
+    "task_id": "project_scope",
+    "description": "Add a project-scope section after the repository has its initial documentation."
+  },
+  "2026-10-12": {
+    "task_id": "setup_notes",
+    "description": "Add local setup guidance once project files exist."
+  },
+  "2026-10-17": {
+    "task_id": "testing_notes",
+    "description": "Add testing guidance once an application entry point exists."
+  },
+  "2026-10-23": {
+    "task_id": "development_workflow",
+    "description": "Add a simple development workflow."
+  },
+  "2026-10-28": {
+    "task_id": "future_scope",
+    "description": "Add a future-scope section for planned attendance features."
+  }
+}
