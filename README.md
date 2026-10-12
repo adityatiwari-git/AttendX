@@ -30,3 +30,6 @@ The important rule is:
 
 The workflow does not use Claude, OpenAI, or another external AI coding service. It only runs predefined repository-specific maintenance tasks, checks the result, and creates a draft PR when an actual change was made.
 
+## Setup Notes
+
+Add local setup guidance once project files exist.
