@@ -51,6 +51,15 @@ class LoginRoleRoutingTests(TestCase):
     def test_faculty_cannot_choose_student_workspace(self):
         self.assertFalse(self._form("faculty1", User.Role.STUDENT).is_valid())
 
+    def test_login_form_rejects_hidden_admin_choice(self):
+        form = RoleAuthenticationForm(data={
+            "username": "masteradmin",
+            "password": "StrongPass!2026",
+            "role": User.Role.ADMIN,
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn("role", form.errors)
+
     def test_admin_is_not_a_visible_login_choice(self):
         form = RoleAuthenticationForm()
         self.assertEqual([value for value, _ in form.fields["role"].choices], [User.Role.STUDENT, User.Role.FACULTY])
