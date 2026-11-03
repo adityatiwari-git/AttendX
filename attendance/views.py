@@ -48,8 +48,7 @@ def mark_attendance(request):
     subjects = Subject.objects.all() if request.user.role == User.Role.ADMIN or request.user.is_superuser else Subject.objects.filter(
         Q(faculty=request.user) | Q(faculty_assignments__faculty=request.user)
     ).distinct()
-    form = ClassSessionForm(request.POST or None)
-    form.fields["subject"].queryset = subjects
+    form = ClassSessionForm(request.POST or None, allowed_subjects=subjects)
     if request.method == "POST" and form.is_valid():
         session = form.save(commit=False)
         session.faculty = request.user if request.user.role == User.Role.FACULTY else None
@@ -57,7 +56,7 @@ def mark_attendance(request):
         students = User.objects.filter(enrollments__subject=session.subject, role=User.Role.STUDENT).distinct()
         with transaction.atomic():
             for student in students:
-                AttendanceRecord.objects.get_or_create(session=session, student=student, defaults={"status": "ABSENT", "marked_by": request.user})
+                AttendanceRecord.objects.get_or_create(session=session, student=student, defaults={"status": AttendanceRecord.Status.ABSENT, "marked_by": request.user})
         messages.success(request, "Class session created. Review and update the attendance register.")
         return redirect("session_detail", session_id=session.pk)
     return render(request, "attendance/mark.html", {"form": form})
