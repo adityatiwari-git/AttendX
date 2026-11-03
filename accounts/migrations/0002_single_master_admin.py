@@ -2,6 +2,7 @@ from django.db import migrations, models
 from django.db.models import Q
 
 
+# Keep one existing privileged account as the Master Admin; preserve other user records.
 def consolidate_master_admin(apps, schema_editor):
     User = apps.get_model("accounts", "User")
     alias = schema_editor.connection.alias
