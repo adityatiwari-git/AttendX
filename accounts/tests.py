@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
+
 from .forms import RegistrationForm, RoleAuthenticationForm
 from .models import User
 
@@ -64,14 +65,22 @@ class LoginRoleRoutingTests(TestCase):
         with self.assertRaises(ValidationError):
             self.admin.save()
 
+    def test_master_admin_cannot_be_deactivated(self):
+        self.admin.is_active = False
+        with self.assertRaises(ValidationError):
+            self.admin.save()
+
     def test_master_admin_cannot_be_deleted(self):
         with self.assertRaises(ValidationError):
             self.admin.delete()
 
-    def test_regular_user_cannot_become_superuser(self):
+    def test_regular_user_cannot_become_staff_or_superuser(self):
+        self.student.is_staff = True
         self.student.is_superuser = True
-        with self.assertRaises(ValidationError):
-            self.student.save()
+        self.student.save()
+        self.student.refresh_from_db()
+        self.assertFalse(self.student.is_staff)
+        self.assertFalse(self.student.is_superuser)
 
     def test_createsuperuser_provisions_admin_role(self):
         self.assertEqual(self.admin.role, User.Role.ADMIN)
