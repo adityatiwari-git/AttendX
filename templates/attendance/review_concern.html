@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Review attendance concern | AttendX{% endblock %}
+{% block content %}
+<div class="form-page"><a class="back-link" href="{% url 'session_detail' concern.record.session_id %}">← Back to attendance register</a><section class="panel-card form-panel"><span class="eyebrow">FACULTY REVIEW</span><h1 class="page-title">Student attendance concern</h1><p class="page-subtitle">{{ concern.record.session.subject.name }} · {{ concern.record.session.session_date|date:"d M Y" }}</p><div class="record-summary"><strong>{{ concern.student.get_full_name|default:concern.student.username }}</strong><span>{{ concern.student.email }}</span><p>{{ concern.message }}</p></div><form method="post" class="styled-form">{% csrf_token %}{{ form.as_p }}<button class="btn btn-navy btn-lg" type="submit">Save review →</button></form></section></div>
+{% endblock %}
