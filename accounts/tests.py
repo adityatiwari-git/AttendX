@@ -77,6 +77,25 @@ class LoginRoleRoutingTests(TestCase):
         with self.assertRaises(ValidationError):
             self.student.save()
 
+
+    def test_student_dashboard_remains_available(self):
+        self.client.force_login(self.student)
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "dashboards/student.html")
+
+    def test_faculty_dashboard_remains_available(self):
+        self.client.force_login(self.faculty)
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "dashboards/faculty.html")
+
+    def test_master_admin_dashboard_is_selected_by_account_role(self):
+        self.client.force_login(self.admin)
+        response = self.client.get(reverse("dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "dashboards/admin.html")
+
     def test_createsuperuser_provisions_admin_role(self):
         self.assertEqual(self.admin.role, User.Role.ADMIN)
         self.assertTrue(self.admin.is_staff)
