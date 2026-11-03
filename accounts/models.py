@@ -7,7 +7,7 @@ from django.db.models import Q
 class ProtectedUserQuerySet(models.QuerySet):
     def delete(self):
         # Bulk deletion must never remove the institutional Master Admin.
-        return self.exclude(role="ADMIN")._raw_delete(self.db), {}
+        return models.QuerySet.delete(self.exclude(role="ADMIN"))
 
 
 class AttendXUserManager(UserManager.from_queryset(ProtectedUserQuerySet)):
