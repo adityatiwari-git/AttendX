@@ -11,7 +11,9 @@ def home(request):
 def dashboard(request):
     user = request.user
     if user.role == User.Role.STUDENT and not user.is_superuser:
-        records = AttendanceRecord.objects.filter(student=user).select_related("session__subject")
+        records = AttendanceRecord.objects.filter(
+            student=user, session__status="COMPLETED"
+        ).select_related("session__subject")
         total = records.count()
         present = records.filter(status=AttendanceRecord.Status.PRESENT).count()
         return render(request, "dashboards/student.html", {
