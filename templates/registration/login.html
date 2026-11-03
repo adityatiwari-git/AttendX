@@ -2,11 +2,11 @@
 {% block title %}Log in | AttendX{% endblock %}
 {% block content %}
 <section class="auth-layout">
-  <div class="auth-aside"><span class="eyebrow eyebrow-light">WELCOME BACK</span><h1>Your academic day, <span>in focus.</span></h1><p>Choose your workspace and sign in to continue with your academic responsibilities.</p><div class="auth-aside-mark">A<span>X</span></div></div>
-  <div class="auth-card"><span class="auth-kicker">ATTENDX ACCOUNT</span><h2>Welcome back</h2><p class="auth-subtitle">Select your role, then enter your account credentials.</p>
+  <div class="auth-aside"><span class="eyebrow eyebrow-light">WELCOME BACK</span><h1>Your academic day, <span>in focus.</span></h1><p>Sign in to continue to your academic workspace.</p><div class="auth-aside-mark">A<span>X</span></div></div>
+  <div class="auth-card"><span class="auth-kicker">ATTENDX ACCOUNT</span><h2>Welcome back</h2><p class="auth-subtitle">Choose Student or Faculty, then enter your credentials.</p>
     <form method="post" class="auth-form">{% csrf_token %}
       {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
-      <p><label for="{{ form.role.id_for_label }}">Sign in as</label>{{ form.role }}{{ form.role.errors }}</p>
+      <p><label for="{{ form.role.id_for_label }}">Continue as</label>{{ form.role }}{{ form.role.errors }}</p>
       <p><label for="{{ form.username.id_for_label }}">Username</label>{{ form.username }}{{ form.username.errors }}</p>
       <p><label for="{{ form.password.id_for_label }}">Password</label>{{ form.password }}{{ form.password.errors }}</p>
       <input type="hidden" name="next" value="{{ next }}">
