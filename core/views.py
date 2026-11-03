@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
 from accounts.models import User
-from academics.models import Enrollment, FacultySubjectAssignment, StudentProfile, Subject
+from academics.models import Enrollment, FacultySubjectAssignment, StudentProfile, Subject, TimetableEntry
 from attendance.models import AttendanceConcern, AttendanceRecord, ClassSession
 
 
@@ -53,7 +53,7 @@ def dashboard(request):
             Q(record__session__faculty=user) | Q(record__session__subject__faculty=user) | Q(record__session__subject__faculty_assignments__faculty=user)
         ).select_related("student", "record__session__subject").distinct()
         return render(request, "dashboards/faculty.html", {
-            "subjects": subjects, "assignments": assignments, "sessions": sessions,\n            "timetable": __import__("academics.models", fromlist=["TimetableEntry"]).TimetableEntry.objects.filter(faculty=user).select_related("subject", "batch__course"),
+            "subjects": subjects, "assignments": assignments, "sessions": sessions,\n            "timetable": TimetableEntry.objects.filter(faculty=user).select_related("subject", "batch__course"),
             "session_count": ClassSession.objects.filter(Q(faculty=user) | Q(subject__faculty=user) | Q(subject__faculty_assignments__faculty=user)).distinct().count(),
             "pending_concerns": concerns.filter(status__in=["OPEN", "REVIEWING"])[:20],
             "pending_count": concerns.filter(status__in=["OPEN", "REVIEWING"]).count(),
