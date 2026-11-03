@@ -4,7 +4,14 @@ from django.db import models
 from django.db.models import Q
 
 
-class AttendXUserManager(UserManager):
+class ProtectedUserQuerySet(models.QuerySet):
+    def delete(self):
+        if self.filter(role="ADMIN").exists():
+            raise ValidationError("The Master Admin account cannot be deleted.")
+        return super().delete()
+
+
+class AttendXUserManager(UserManager.from_queryset(ProtectedUserQuerySet)):
     def create_superuser(self, username, email=None, password=None, **extra_fields):
         extra_fields["role"] = "ADMIN"
         extra_fields["is_staff"] = True
