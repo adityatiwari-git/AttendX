@@ -74,6 +74,10 @@ class LoginRoleRoutingTests(TestCase):
         with self.assertRaises(ValidationError):
             self.admin.delete()
 
+    def test_master_admin_cannot_be_bulk_deleted(self):
+        with self.assertRaises(ValidationError):
+            User.objects.filter(pk=self.admin.pk).delete()
+
     def test_regular_user_cannot_become_staff_or_superuser(self):
         self.student.is_staff = True
         self.student.is_superuser = True
