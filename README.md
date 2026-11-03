@@ -108,19 +108,7 @@ python manage.py runserver
 
 Open **http://127.0.0.1:8000/** in your browser. The Django admin is available at **http://127.0.0.1:8000/admin/**.
 
-> Local development uses SQLite by default. Hosted production configuration expects a PostgreSQL connection through the `DATABASE_URL` environment variable.
-
-## Configuration
-
-For production, configure environment variables in the hosting provider rather than committing credentials to the repository:
-
-- `DJANGO_SECRET_KEY` — a strong, private Django secret key.
-- `DJANGO_DEBUG` — set to `False` in production.
-- `DJANGO_ALLOWED_HOSTS` — the deployed hostname.
-- `DJANGO_CSRF_TRUSTED_ORIGINS` — trusted HTTPS origin(s).
-- `DATABASE_URL` — private PostgreSQL connection URL.
-
-Never commit secret keys, database credentials, local database files containing personal information, or real student records.
+> SQLite is used for local development; the hosted setup uses PostgreSQL.
 
 ## Development status
 
