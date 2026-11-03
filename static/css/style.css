@@ -226,3 +226,16 @@ form input:not([type=checkbox]):not(.auth-form input),form select:not(.auth-form
  .stat-card { min-height:112px; padding:15px; }
  .stat-card strong { font-size:1.7rem; }
 }
+
+.role-choice-list { display:grid; gap:8px; margin:0 0 22px; }
+.role-choice { display:flex; align-items:center; gap:11px; padding:11px 12px; border:1px solid #e8e9e4; border-radius:11px; background:#fff; }
+.role-choice.active { border-color:#b8d0c8; background:#f5f9f6; }
+.role-choice.locked { opacity:.76; }
+.role-choice-icon { display:grid; place-items:center; width:34px; height:34px; border-radius:10px; color:#426b8b; background:#eaf1f5; font-weight:800; }
+.role-choice:nth-child(2) .role-choice-icon { color:#557b73; background:#eaf2ed; }
+.role-choice:nth-child(3) .role-choice-icon { color:#8a7555; background:#f5f0e6; }
+.role-choice strong,.role-choice small { display:block; }
+.role-choice strong { color:var(--navy); font-size:.78rem; }
+.role-choice small { margin-top:2px; color:#8b969c; font-size:.67rem; }
+.role-choice-tag { margin-left:auto; color:#6e8d83; font-size:.63rem; font-weight:800; white-space:nowrap; }
+.role-choice.locked .role-choice-tag { color:#a18d6a; }
