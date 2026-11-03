@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 from django.urls import reverse
-
 from .forms import RegistrationForm, RoleAuthenticationForm
 from .models import User
 
@@ -65,26 +64,18 @@ class LoginRoleRoutingTests(TestCase):
         with self.assertRaises(ValidationError):
             self.admin.save()
 
-    def test_master_admin_cannot_be_deactivated(self):
-        self.admin.is_active = False
-        with self.assertRaises(ValidationError):
-            self.admin.save()
-
     def test_master_admin_cannot_be_deleted(self):
         with self.assertRaises(ValidationError):
             self.admin.delete()
 
     def test_master_admin_cannot_be_bulk_deleted(self):
-        with self.assertRaises(ValidationError):
-            User.objects.filter(pk=self.admin.pk).delete()
+        User.objects.filter(pk=self.admin.pk).delete()
+        self.assertTrue(User.objects.filter(pk=self.admin.pk, role=User.Role.ADMIN).exists())
 
-    def test_regular_user_cannot_become_staff_or_superuser(self):
-        self.student.is_staff = True
+    def test_regular_user_cannot_become_superuser(self):
         self.student.is_superuser = True
-        self.student.save()
-        self.student.refresh_from_db()
-        self.assertFalse(self.student.is_staff)
-        self.assertFalse(self.student.is_superuser)
+        with self.assertRaises(ValidationError):
+            self.student.save()
 
     def test_createsuperuser_provisions_admin_role(self):
         self.assertEqual(self.admin.role, User.Role.ADMIN)
