@@ -17,7 +17,7 @@
 
 AttendX is a web-based attendance management project designed to organise academic attendance in one place. It provides separate experiences for students, faculty members, and administrators, with Django handling authentication, application logic, and data management.
 
-The project is being developed incrementally, with an emphasis on clear role separation, reliable attendance records, and a maintainable application structure.
+The project is being developed incrementally, with an emphasis on clear role separation, connected academic records, reliable attendance history, and a maintainable application structure.
 
 ## Technology stack
 
@@ -28,8 +28,8 @@ The project is being developed incrementally, with an emphasis on clear role sep
 | Database | SQLite for local development; PostgreSQL for hosted deployment |
 | Static files | WhiteNoise |
 | Application server | Gunicorn |
-| Hosting | Koyeb |
-| Database hosting | Neon PostgreSQL |
+| Hosting | Render |
+| Database hosting | Neon PostgreSQL (planned configuration) |
 | Version control & delivery | Git, GitHub (deployment connected to the repository) |
 
 ## Current features
@@ -37,7 +37,7 @@ The project is being developed incrementally, with an emphasis on clear role sep
 - **Role-based accounts:** Student, Faculty, and Administrator roles using a custom Django user model.
 - **Authentication:** Django session-based login and logout.
 - **Student registration:** Public registration creates student accounts only; privileged roles cannot be self-assigned.
-- **Academic structure:** Departments, courses, subjects, and student enrollments.
+- **College-wide academic structure:** Departments, programmes/courses, academic batches, student profiles, semester-specific subjects, enrollments, and weekly timetable entries.\n- **Multi-department faculty assignments:** A faculty member can be assigned to subjects across programmes and departments.\n- **Semester history:** Student dashboards present semester-wise attendance archives and current-semester subject enrolments.\n- **Faculty workspace:** Assigned subjects, cross-programme teaching schedule, class sessions, student registers, and attendance concerns.
 - **Class sessions:** Faculty can create attendance sessions for subjects.
 - **Attendance records:** Present, Absent, and Late statuses, with a database constraint preventing duplicate records for the same student and session.
 - **Role-specific dashboards:** Separate dashboard views based on account role.
@@ -112,7 +112,7 @@ Open **http://127.0.0.1:8000/** in your browser. The Django admin is available a
 
 ## Development status
 
-AttendX is an actively developing project. The repository contains the initial Django application and core attendance workflow; it should not yet be treated as a production-ready institutional system.
+AttendX is an actively developing project. The repository now includes the college-wide academic data model, multi-faculty subject assignments, semester archive views, and timetable data structures alongside the core attendance workflow. It should not yet be treated as a production-ready institutional system.
 
 Before real-world use, the project still needs generated and committed migrations, broader automated test coverage, a complete permissions review, deployment verification, and a security/privacy review. Use fictional data for demonstrations.
 
@@ -123,7 +123,7 @@ Before real-world use, the project still needs generated and committed migration
 - [x] Academic structure and enrollment models
 - [x] Class session and attendance record models
 - [x] Initial role dashboards and faculty attendance workflow
-- [ ] Commit generated database migrations
+- [ ] Verify generated database migrations and hosted schema update
 - [ ] Expand automated tests and harden role/object permissions
 - [ ] Add subject-wise attendance analytics and report exports
 - [ ] Improve administrative workflows and interface polish
