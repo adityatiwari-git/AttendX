@@ -12,5 +12,9 @@ class AttendXUserAdmin(UserAdmin):
 
     def save_model(self, request, obj, form, change):
         if obj.role == User.Role.ADMIN:
+            # ADMIN is the trusted, full-control institutional role.
             obj.is_staff = True
+            obj.is_superuser = True
+        elif not obj.is_superuser:
+            obj.is_staff = False
         super().save_model(request, obj, form, change)
