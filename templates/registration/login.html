@@ -1,1 +1,11 @@
-{% extends 'base.html' %}{% block content %}<div class="row justify-content-center"><div class="col-md-6 col-lg-5"><div class="card p-4"><h2>Welcome back</h2><p class="text-muted">Sign in to AttendX.</p><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="btn btn-primary w-100">Login</button></form><p class="small mt-3">New student? <a href="{% url 'register' %}">Register</a></p></div></div></div>{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Log in | AttendX{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><span class="eyebrow eyebrow-light">WELCOME BACK</span><h1>Your academic day, <span>in focus.</span></h1><p>Sign in to pick up where you left off and stay connected with your classes.</p><div class="auth-aside-mark">A<span>X</span></div></div>
+  <div class="auth-card"><span class="auth-kicker">ATTENDX ACCOUNT</span><h2>Welcome back</h2><p class="auth-subtitle">Enter your details to access your workspace.</p>
+    <form method="post" class="auth-form">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="btn btn-navy btn-lg w-100" type="submit">Log in <span aria-hidden="true">→</span></button></form>
+    <p class="auth-switch">New to AttendX? <a href="{% url 'register' %}">Create a student account</a></p>
+  </div>
+</section>
+{% endblock %}
