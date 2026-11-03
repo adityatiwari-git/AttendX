@@ -34,7 +34,9 @@ The project is being developed incrementally, with an emphasis on clear role sep
 
 ## Current features
 
-- **Role-based accounts:** Student, Faculty, and Administrator roles using a custom Django user model.
+- **Role-based accounts:** Student and Faculty workspaces, plus one protected Master Admin account.
+- **Single Master Admin:** A conditional database uniqueness constraint prevents a second Admin account; the Master Admin cannot be demoted or deleted through normal model/admin operations.
+- **Secure provisioning:** The Master Admin is created through Django's `createsuperuser` management command. The public registration form always creates Student accounts.
 - **Authentication:** Django session-based login and logout.
 - **Student registration:** Public registration creates student accounts only; privileged roles cannot be self-assigned.
 - **College-wide academic structure:** Departments, programmes/courses, academic batches, student profiles, semester-specific subjects, enrollments, and weekly timetable entries.
@@ -100,7 +102,7 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 5. Create an administrator account and start the server
+### 5. Create the single Master Admin account and start the server
 
 ```bash
 python manage.py createsuperuser
@@ -109,13 +111,15 @@ python manage.py runserver
 
 Open **http://127.0.0.1:8000/** in your browser. The Django admin is available at **http://127.0.0.1:8000/admin/**.
 
+`createsuperuser` provisions the account with the protected `ADMIN` role. Do not create another superuser manually or share the credentials. For hosted deployment, run the command once in the service's authenticated shell after migrations complete.
+
 > SQLite is used for local development; the hosted setup uses PostgreSQL.
 
 ## Development status
 
 AttendX is an actively developing project. The repository now includes the college-wide academic data model, multi-faculty subject assignments, semester archive views, and timetable data structures alongside the core attendance workflow. It should not yet be treated as a production-ready institutional system.
 
-Before real-world use, the project still needs generated and committed migrations, broader automated test coverage, a complete permissions review, deployment verification, and a security/privacy review. Use fictional data for demonstrations.
+Before real-world use, the project still needs full end-to-end permission testing, deployment verification, a secure account-recovery procedure, and a security/privacy review. Use fictional data for demonstrations.
 
 ## Roadmap
 
