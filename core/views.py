@@ -40,9 +40,9 @@ def dashboard(request):
             "absent": records.filter(status=AttendanceRecord.Status.ABSENT).count(),
             "late": records.filter(status=AttendanceRecord.Status.LATE).count(),
             "percentage": round(100 * present / total, 1) if total else 0,
-            "recent": records[:60], "concerns": concerns[:20],
+            "recent": records, "concerns": concerns[:20],
             "open_concerns": concerns.filter(status__in=["OPEN", "REVIEWING"]).count(),
-            "profile": profile, "semester_data": semester_data,
+            "profile": profile, "semester_data": semester_data,\n            "timetable": profile.batch.timetable_entries.select_related("subject", "faculty") if profile else [],
             "current_semester": current_semester, "current_subjects": current_subjects,
         })
     if user.role == User.Role.FACULTY and not user.is_superuser:
@@ -53,8 +53,8 @@ def dashboard(request):
             Q(record__session__faculty=user) | Q(record__session__subject__faculty=user) | Q(record__session__subject__faculty_assignments__faculty=user)
         ).select_related("student", "record__session__subject").distinct()
         return render(request, "dashboards/faculty.html", {
-            "subjects": subjects, "assignments": assignments, "sessions": sessions,
-            "session_count": sessions.count(),
+            "subjects": subjects, "assignments": assignments, "sessions": sessions,\n            "timetable": __import__("academics.models", fromlist=["TimetableEntry"]).TimetableEntry.objects.filter(faculty=user).select_related("subject", "batch__course"),
+            "session_count": ClassSession.objects.filter(Q(faculty=user) | Q(subject__faculty=user) | Q(subject__faculty_assignments__faculty=user)).distinct().count(),
             "pending_concerns": concerns.filter(status__in=["OPEN", "REVIEWING"])[:20],
             "pending_count": concerns.filter(status__in=["OPEN", "REVIEWING"]).count(),
         })
