@@ -239,3 +239,15 @@ form input:not([type=checkbox]):not(.auth-form input),form select:not(.auth-form
 .role-choice small { margin-top:2px; color:#8b969c; font-size:.67rem; }
 .role-choice-tag { margin-left:auto; color:#6e8d83; font-size:.63rem; font-weight:800; white-space:nowrap; }
 .role-choice.locked .role-choice-tag { color:#a18d6a; }
+
+/* Semester archive and institution-wide teaching views */
+.semester-archive { display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:11px; padding:18px; }
+.semester-card { display:flex; flex-direction:column; gap:6px; padding:15px; border:1px solid #e9ece7; border-radius:12px; color:inherit; background:#fcfcfa; text-decoration:none; transition:transform .15s ease,border-color .15s ease; }
+.semester-card:hover { transform:translateY(-2px); border-color:#9fbcb4; }
+.semester-card span { color:#82918f; font-size:.64rem; font-weight:800; letter-spacing:.07em; }
+.semester-card strong { color:var(--navy); font:800 1.65rem "Manrope",sans-serif; }
+.semester-card small { color:#89949a; font-size:.68rem; line-height:1.5; }
+.semester-current { border-color:#a9c3b9; background:#f1f6f2; }
+.semester-current span { color:#54796e; }
+html { scroll-behavior:smooth; }
+@media(max-width:575.98px) { .semester-archive { grid-template-columns:repeat(2,minmax(0,1fr)); padding:13px; } }
