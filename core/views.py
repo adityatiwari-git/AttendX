@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
 from accounts.models import User
-from academics.models import Enrollment, FacultySubjectAssignment, StudentProfile, Subject, TimetableEntry
+from academics.models import AcademicBatch, Course, Department, Enrollment, FacultySubjectAssignment, StudentProfile, Subject, TimetableEntry
 from attendance.models import AttendanceConcern, AttendanceRecord, ClassSession
 
 
@@ -62,6 +62,9 @@ def dashboard(request):
         "students": User.objects.filter(role=User.Role.STUDENT).count(),
         "faculty": User.objects.filter(role=User.Role.FACULTY).count(),
         "subjects": Subject.objects.count(),
+        "departments": Department.objects.count(),
+        "programmes": Course.objects.count(),
+        "batches": AcademicBatch.objects.count(),
         "sessions": ClassSession.objects.count(),
         "concerns": AttendanceConcern.objects.filter(status__in=["OPEN", "REVIEWING"]).count(),
     })
