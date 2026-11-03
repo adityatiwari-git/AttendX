@@ -32,9 +32,10 @@ def dashboard(request):
                 "absent": semester_records.filter(status=AttendanceRecord.Status.ABSENT).count(),
                 "percentage": round(100 * attended / count, 1) if count else 0,
                 "subjects": Enrollment.objects.filter(student=user, subject__semester=semester).select_related("subject", "subject__course"),
+                "records": semester_records.select_related("session__subject__course__department", "session__faculty").order_by("-session__session_date", "-id"),
             })
         current_semester = profile.current_semester if profile else (semester_values[0] if semester_values else 1)
-        current_subjects = Enrollment.objects.filter(student=user, subject__semester=current_semester).select_related("subject", "subject__course").prefetch_related("subject__faculty_assignments__faculty").annotate(total_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user)), present_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user, subject__sessions__records__status="PRESENT")) )
+        current_subjects = Enrollment.objects.filter(student=user, subject__semester=current_semester).select_related("subject", "subject__course").prefetch_related("subject__faculty_assignments__faculty").annotate(total_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user), distinct=True), present_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user, subject__sessions__records__status="PRESENT"), distinct=True) )
         return render(request, "dashboards/student.html", {
             "total": total, "present": present,
             "absent": records.filter(status=AttendanceRecord.Status.ABSENT).count(),
