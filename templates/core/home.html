@@ -3,14 +3,14 @@
 {% block content %}
 <section class="home-hero">
   <div class="hero-copy">
-    <span class="eyebrow"><span class="eyebrow-dot"></span> THE ACADEMIC ATTENDANCE WORKSPACE</span>
-    <h1>Every class.<br><span>One clear view.</span></h1>
-    <p class="hero-lead">Meet a calmer, more connected way to manage attendance. Keep students, faculty and academic records moving in sync.</p>
+    <span class="eyebrow"><span class="eyebrow-dot"></span> YOUR CAMPUS, IN SYNC</span>
+    <h1>Academic life.<br><span>Without the chaos.</span></h1>
+    <p class="hero-lead">A smarter space for the everyday campus grind. Track classes, bring records together and keep students and faculty on the same page.</p>
     <div class="hero-actions">
       {% if user.is_authenticated %}<a class="btn btn-navy btn-lg" href="{% url 'dashboard' %}">Open your workspace <span aria-hidden="true">↗</span></a>
       {% else %}<a class="btn btn-navy btn-lg" href="{% url 'login' %}">Get started <span aria-hidden="true">↗</span></a><a class="btn btn-outline-navy btn-lg" href="{% url 'register' %}">Create student account</a>{% endif %}
     </div>
-    <div class="hero-trust"><span class="trust-check">✓</span><span>Purpose-built for everyday academic coordination</span></div>
+    <div class="hero-trust"><span class="trust-check">✓</span><span>Less admin. More time for what matters.</span></div>
   </div>
   <div class="hero-visual" aria-label="Illustration of an attendance dashboard">
     <div class="visual-glow"></div><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
@@ -26,7 +26,7 @@
   </div>
 </section>
 <section class="roles-section">
-  <div class="section-heading"><span class="eyebrow">ONE PLATFORM, THREE WORKSPACES</span><h2>Everything has its place.</h2><p>Focused experiences for the people behind every class.</p></div>
+  <div class="section-heading"><span class="eyebrow">BUILT AROUND YOUR ROLE</span><h2>One campus. Three focused spaces.</h2><p>No clutter, no guesswork—just the tools each person needs.</p></div>
   <div class="row g-3 role-grid">
     <div class="col-md-4"><article class="role-card"><span class="role-number">01</span><div class="role-icon student-icon">S</div><h3>Student workspace</h3><p>See attendance, explore semester history and follow up on attendance concerns.</p><span class="role-link">Your academic progress <span>↗</span></span></article></div>
     <div class="col-md-4"><article class="role-card"><span class="role-number">02</span><div class="role-icon faculty-icon">F</div><h3>Faculty workspace</h3><p>Manage teaching assignments, record class attendance and review student requests.</p><span class="role-link">Your teaching, organised <span>↗</span></span></article></div>
