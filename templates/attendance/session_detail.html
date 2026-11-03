@@ -1,1 +1,15 @@
-{% extends 'base.html' %}{% block content %}<h1 class="h4">{{ session.subject.name }} attendance</h1><p>{{ session.session_date }}</p><form method="post">{% csrf_token %}{{ formset.management_form }}<div class="card p-3"><table class="table"><tr><th>Student</th><th>Status</th></tr>{% for f in formset %}<tr><td>{{ f.instance.student.get_full_name|default:f.instance.student.username }}{{ f.id }}</td><td>{{ f.status }}</td></tr>{% empty %}<tr><td colspan="2">No enrolled students.</td></tr>{% endfor %}</table></div><button class="btn btn-primary mt-3">Save attendance</button></form>{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Attendance register | AttendX{% endblock %}
+{% block content %}
+<div class="form-page">
+  <a class="back-link" href="{% url 'dashboard' %}">← Back to workspace</a>
+  <div class="dashboard-heading"><div><span class="eyebrow">CLASS REGISTER</span><h1 class="page-title">{{ session.subject.name }}</h1><p class="page-subtitle">{{ session.session_date|date:"l, d M Y" }}{% if session.topic %} · {{ session.topic }}{% endif %}</p></div><span class="dashboard-role">Attendance</span></div>
+  <form method="post">{% csrf_token %}{{ formset.management_form }}
+    <section class="panel-card">
+      <div class="panel-heading"><div><h2>Student attendance</h2><p>Update each student's attendance status, then save your register.</p></div></div>
+      <div class="table-responsive"><table class="table align-middle attendance-table"><thead><tr><th>Student</th><th>Status</th></tr></thead><tbody>{% for f in formset %}<tr><td class="fw-semibold">{{ f.instance.student.get_full_name|default:f.instance.student.username }}{{ f.id }}</td><td>{{ f.status }}</td></tr>{% empty %}<tr><td colspan="2" class="empty-state">No enrolled students.</td></tr>{% endfor %}</tbody></table></div>
+      <div class="panel-actions"><button class="btn btn-navy" type="submit">Save attendance →</button></div>
+    </section>
+  </form>
+</div>
+{% endblock %}
