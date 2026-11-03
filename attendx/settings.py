@@ -73,6 +73,10 @@ if DATABASE_URL:
         )
     }
 else:
+    if not DEBUG:
+        raise ImproperlyConfigured(
+            "Set DATABASE_URL to a persistent PostgreSQL database for deployment."
+        )
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
