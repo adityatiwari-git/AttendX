@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#14243a">
+  <meta name="theme-color" content="#101b33">
   <title>{% block title %}AttendX | Academic Attendance{% endblock %}</title>
-  <meta name="description" content="A clearer, more organised way to manage academic attendance.">
+  <meta name="description" content="A modern academic workspace for attendance, class records and student coordination.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -17,61 +17,40 @@
   <nav class="navbar navbar-expand-lg attendx-navbar">
     <div class="container">
       <a class="navbar-brand brand-lockup" href="{% url 'home' %}">
-        <span class="brand-mark">A</span><span>Attend<span class="brand-x">X</span><small>ACADEMIC WORKSPACE</small></span>
+        <span class="brand-mark"><span>A</span></span><span class="brand-word">Attend<span class="brand-x">X</span><small>ACADEMIC WORKSPACE</small></span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="mainNav">
         <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2 nav-actions">
           {% if user.is_authenticated %}
-            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-            {% if user.role == 'FACULTY' or user.is_superuser %}
-              <a class="nav-link" href="{% url 'mark_attendance' %}">Take attendance</a>
-            {% endif %}
-            <span class="nav-user">Hi, {{ user.get_short_name|default:user.username }}</span>
+            <a class="nav-link" href="{% url 'dashboard' %}">Overview</a>
+            {% if user.role == 'FACULTY' or user.is_superuser %}<a class="nav-link" href="{% url 'mark_attendance' %}">Take attendance</a>{% endif %}
+            <span class="nav-user"><span class="nav-avatar">{{ user.username|slice:":1"|upper }}</span><span>Hi, {{ user.get_short_name|default:user.username }}</span></span>
             <form method="post" action="{% url 'logout' %}" class="nav-logout">{% csrf_token %}<button class="btn btn-outline-navy btn-sm">Sign out</button></form>
           {% else %}
             <a class="nav-link nav-login" href="{% url 'login' %}">Log in</a>
-            <a class="btn btn-navy nav-register" href="{% url 'register' %}">Create account <span aria-hidden="true">→</span></a>
+            <a class="btn btn-navy nav-register" href="{% url 'register' %}">Create account <span aria-hidden="true">↗</span></a>
           {% endif %}
         </div>
       </div>
     </div>
   </nav>
-
   <main class="site-main">
     <div class="container">
       {% for message in messages %}<div class="alert alert-info app-alert">{{ message }}</div>{% endfor %}
       {% block content %}{% endblock %}
     </div>
   </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-topline">
-        <span class="footer-brand">AttendX <span>·</span> Academic Attendance Management</span>
-        <span class="footer-note">A simple workspace for better academic coordination.</span>
+  <footer class="site-footer"><div class="container">
+    <div class="footer-topline"><span class="footer-brand">AttendX <span>·</span> Academic Attendance Management</span><span class="footer-note">A clearer view of every class.</span></div>
+    <div class="footer-bottomline"><div class="footer-credit"><span>Designed &amp; developed by <strong>Aditya Tiwari</strong></span><span class="footer-qualification">Second-Year B.Tech Bioinformatics Student</span></div>
+      <div class="footer-socials">
+        <a class="footer-social-link" href="https://www.linkedin.com/in/er-aditya-tiwari/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile"><span class="social-mark">in</span> LinkedIn</a>
+        <a class="footer-social-link" href="https://github.com/adityatiwari-git" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile"><span class="social-mark">⌘</span> GitHub</a>
       </div>
-      <div class="footer-bottomline">
-        <div class="footer-credit">
-          <span>Designed &amp; developed by <strong>Aditya Tiwari</strong></span>
-          <span class="footer-qualification">Second-Year B.Tech Bioinformatics Student</span>
-        </div>
-        <div class="footer-socials" aria-label="Developer profiles">
-          <a class="footer-social-link" href="https://www.linkedin.com/in/er-aditya-tiwari/" target="_blank" rel="noopener noreferrer" aria-label="Aditya Tiwari on LinkedIn">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.5a1.7 1.7 0 1 1 0 3.4 1.7 1.7 0 0 1 0-3.4ZM3.8 8.4h2.9v11.8H3.8V8.4Zm4.8 0h2.8V10h.1c.4-.8 1.4-1.9 3.1-1.9 3.3 0 3.9 2.1 3.9 4.8v7.3h-2.9v-6.5c0-1.6 0-3-1.9-3s-2.2 1.4-2.2 2.9v6.6H8.6V8.4Z"/></svg>
-            <span>LinkedIn</span>
-          </a>
-          <a class="footer-social-link" href="https://github.com/adityatiwari-git" target="_blank" rel="noopener noreferrer" aria-label="Aditya Tiwari on GitHub">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.5 21.6c.6.1.8-.3.8-.6v-2.1c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.6-1.2-1.6-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1.8 2.1 3.4 1.5.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.3-5.1-5.5 0-1.2.4-2.1 1.1-2.9-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 3 1.1a10.4 10.4 0 0 1 5.5 0c2.1-1.4 3-1.1 3-1.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.7 1.1 2.9 0 4.2-2.6 5.2-5.1 5.5.4.3.8 1 .8 2v3c0 .3.2.7.8.6A11.1 11.1 0 0 0 12 .9Z"/></svg>
-            <span>GitHub</span>
-          </a>
-        </div>
-      </div>
-      <div class="footer-copyright">© {% now "Y" %} AttendX. All rights reserved.</div>
     </div>
-  </footer>
+    <div class="footer-copyright">© {% now "Y" %} AttendX. All rights reserved.</div>
+  </div></footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
