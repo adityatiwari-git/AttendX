@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from accounts.models import User
 from academics.models import AcademicBatch, Course, Department, Enrollment, FacultySubjectAssignment, StudentProfile, Subject, TimetableEntry
@@ -13,7 +14,22 @@ def home(request):
 @login_required
 def dashboard(request):
     user = request.user
-    if user.role == User.Role.STUDENT and not user.is_superuser:
+    if user.role == User.Role.ADMIN:
+        return render(request, "dashboards/admin.html", {
+            "students": User.objects.filter(role=User.Role.STUDENT).count(),
+            "faculty": User.objects.filter(role=User.Role.FACULTY).count(),
+            "subjects": Subject.objects.count(),
+            "departments": Department.objects.count(),
+            "programmes": Course.objects.count(),
+            "batches": AcademicBatch.objects.count(),
+            "sessions": ClassSession.objects.count(),
+            "concerns": AttendanceConcern.objects.filter(status__in=["OPEN", "REVIEWING"]).count(),
+        })
+
+    if user.is_superuser or user.is_staff:
+        return HttpResponseForbidden("This account is not assigned a valid AttendX workspace. Contact the Master Admin.")
+
+    if user.role == User.Role.STUDENT:
         records = AttendanceRecord.objects.filter(student=user, session__status="COMPLETED").select_related("session__subject__course__department", "session__faculty").prefetch_related("session__subject__faculty_assignments__faculty")
         total = records.count()
         present = records.filter(status=AttendanceRecord.Status.PRESENT).count()
@@ -35,7 +51,7 @@ def dashboard(request):
                 "records": semester_records.select_related("session__subject__course__department", "session__faculty").order_by("-session__session_date", "-id"),
             })
         current_semester = profile.current_semester if profile else (semester_values[0] if semester_values else 1)
-        current_subjects = Enrollment.objects.filter(student=user, subject__semester=current_semester).select_related("subject", "subject__course").prefetch_related("subject__faculty_assignments__faculty").annotate(total_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user), distinct=True), present_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user, subject__sessions__records__status="PRESENT"), distinct=True) )
+        current_subjects = Enrollment.objects.filter(student=user, subject__semester=current_semester).select_related("subject", "subject__course").prefetch_related("subject__faculty_assignments__faculty").annotate(total_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user), distinct=True), present_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user, subject__sessions__records__status="PRESENT"), distinct=True))
         return render(request, "dashboards/student.html", {
             "total": total, "present": present,
             "absent": records.filter(status=AttendanceRecord.Status.ABSENT).count(),
@@ -47,7 +63,8 @@ def dashboard(request):
             "timetable": profile.batch.timetable_entries.select_related("subject", "faculty") if profile else [],
             "current_semester": current_semester, "current_subjects": current_subjects,
         })
-    if user.role == User.Role.FACULTY and not user.is_superuser:
+
+    if user.role == User.Role.FACULTY:
         assignments = FacultySubjectAssignment.objects.filter(faculty=user).select_related("subject__course__department")
         subjects = Subject.objects.filter(Q(faculty_assignments__faculty=user) | Q(faculty=user)).distinct().select_related("course__department").annotate(enrolled_students=Count("enrollments", distinct=True))
         sessions = ClassSession.objects.filter(Q(faculty=user) | Q(subject__faculty=user) | Q(subject__faculty_assignments__faculty=user)).distinct().select_related("subject", "subject__course")[:20]
@@ -61,13 +78,5 @@ def dashboard(request):
             "pending_concerns": concerns.filter(status__in=["OPEN", "REVIEWING"])[:20],
             "pending_count": concerns.filter(status__in=["OPEN", "REVIEWING"]).count(),
         })
-    return render(request, "dashboards/admin.html", {
-        "students": User.objects.filter(role=User.Role.STUDENT).count(),
-        "faculty": User.objects.filter(role=User.Role.FACULTY).count(),
-        "subjects": Subject.objects.count(),
-        "departments": Department.objects.count(),
-        "programmes": Course.objects.count(),
-        "batches": AcademicBatch.objects.count(),
-        "sessions": ClassSession.objects.count(),
-        "concerns": AttendanceConcern.objects.filter(status__in=["OPEN", "REVIEWING"]).count(),
-    })
+
+    return HttpResponseForbidden("This account has no valid AttendX role. Contact the Master Admin.")
