@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .forms import RegistrationForm
+from .forms import RegistrationForm, RoleAuthenticationForm
 from .models import User
 
 
@@ -25,3 +25,49 @@ class RegistrationRoleSecurityTests(TestCase):
         self.client.force_login(user)
         response = self.client.get(reverse("admin:index"))
         self.assertEqual(response.status_code, 302)
+
+
+class LoginRoleRoutingTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(
+            username="masteradmin", password="StrongPass!2026",
+            role=User.Role.ADMIN, is_staff=True, is_superuser=True,
+        )
+        self.student = User.objects.create_user(
+            username="student1", password="StrongPass!2026", role=User.Role.STUDENT,
+        )
+        self.faculty = User.objects.create_user(
+            username="faculty1", password="StrongPass!2026", role=User.Role.FACULTY,
+        )
+
+    def _form(self, username, role):
+        return RoleAuthenticationForm(data={
+            "username": username,
+            "password": "StrongPass!2026",
+            "role": role,
+        })
+
+    def test_admin_can_sign_in_from_student_choice(self):
+        form = self._form("masteradmin", User.Role.STUDENT)
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.get_user(), self.admin)
+
+    def test_admin_can_sign_in_from_faculty_choice(self):
+        form = self._form("masteradmin", User.Role.FACULTY)
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.get_user(), self.admin)
+
+    def test_student_cannot_choose_faculty_workspace(self):
+        form = self._form("student1", User.Role.FACULTY)
+        self.assertFalse(form.is_valid())
+
+    def test_faculty_cannot_choose_student_workspace(self):
+        form = self._form("faculty1", User.Role.STUDENT)
+        self.assertFalse(form.is_valid())
+
+    def test_admin_is_not_a_visible_login_choice(self):
+        form = RoleAuthenticationForm()
+        self.assertEqual(
+            [value for value, _label in form.fields["role"].choices],
+            [User.Role.STUDENT, User.Role.FACULTY],
+        )
