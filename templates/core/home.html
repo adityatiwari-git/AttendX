@@ -4,38 +4,34 @@
 <section class="home-hero">
   <div class="hero-copy">
     <span class="eyebrow"><span class="eyebrow-dot"></span> THE ACADEMIC ATTENDANCE WORKSPACE</span>
-    <h1>Make every class <span>count.</span></h1>
-    <p class="hero-lead">A more thoughtful way for students, faculty and academic teams to keep attendance clear, organised and accessible.</p>
+    <h1>Every class.<br><span>One clear view.</span></h1>
+    <p class="hero-lead">Meet a calmer, more connected way to manage attendance. Keep students, faculty and academic records moving in sync.</p>
     <div class="hero-actions">
-      {% if user.is_authenticated %}
-        <a class="btn btn-navy btn-lg" href="{% url 'dashboard' %}">Go to dashboard <span aria-hidden="true">→</span></a>
-      {% else %}
-        <a class="btn btn-navy btn-lg" href="{% url 'login' %}">Log in <span aria-hidden="true">→</span></a>
-        <a class="btn btn-outline-navy btn-lg" href="{% url 'register' %}">Create student account</a>
-      {% endif %}
+      {% if user.is_authenticated %}<a class="btn btn-navy btn-lg" href="{% url 'dashboard' %}">Open your workspace <span aria-hidden="true">↗</span></a>
+      {% else %}<a class="btn btn-navy btn-lg" href="{% url 'login' %}">Get started <span aria-hidden="true">↗</span></a><a class="btn btn-outline-navy btn-lg" href="{% url 'register' %}">Create student account</a>{% endif %}
     </div>
-    <div class="hero-note"><span class="note-check">✓</span> One shared space. Clearer academic records.</div>
+    <div class="hero-trust"><span class="trust-check">✓</span><span>Purpose-built for everyday academic coordination</span></div>
   </div>
-  <div class="hero-visual" aria-label="Illustration of an attendance overview">
-    <div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
+  <div class="hero-visual" aria-label="Illustration of an attendance dashboard">
+    <div class="visual-glow"></div><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
     <div class="preview-card">
-      <div class="preview-top"><div><span class="preview-kicker">ATTENDANCE OVERVIEW</span><h2>Your classes, at a glance.</h2></div><span class="preview-icon">✦</span></div>
-      <div class="preview-stat"><div><span class="stat-label">WEEKLY ACTIVITY</span><strong>On track</strong></div><span class="stat-pill">This week</span></div>
+      <div class="preview-top"><div><span class="preview-kicker">YOUR WORKSPACE</span><h2>Attendance overview</h2></div><span class="preview-icon">✳</span></div>
+      <div class="preview-highlight"><div><span class="stat-label">WEEKLY SNAPSHOT</span><strong>Stay on track.</strong></div><span class="stat-pill">Live overview</span></div>
       <div class="week-bars"><i style="height:42%"></i><i style="height:68%"></i><i style="height:54%"></i><i style="height:88%"></i><i style="height:72%"></i><i style="height:96%"></i><i style="height:58%"></i></div>
       <div class="week-labels"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
-      <div class="preview-divider"></div>
-      <div class="preview-bottom"><span class="mini-check">✓</span><span><strong>Stay in sync</strong><small>Keep class records organised</small></span><span class="preview-arrow">↗</span></div>
+      <div class="preview-divider"></div><div class="preview-bottom"><span class="mini-check">✓</span><span><strong>Everything in sync</strong><small>Classes, records and people</small></span><span class="preview-arrow">↗</span></div>
     </div>
-    <div class="floating-tag"><span class="floating-dot"></span> Designed for campus life</div>
+    <div class="floating-tag"><span class="floating-dot"></span> Made for campus life</div>
+    <div class="floating-note"><span class="floating-note-icon">✦</span><span><strong>Less clutter.</strong><small>More clarity.</small></span></div>
   </div>
 </section>
-
 <section class="roles-section">
-  <div class="section-heading"><span class="eyebrow">BUILT AROUND YOUR ROLE</span><h2>Everyone stays on the same page.</h2><p>Purposeful tools for the people who make learning happen.</p></div>
+  <div class="section-heading"><span class="eyebrow">ONE PLATFORM, THREE WORKSPACES</span><h2>Everything has its place.</h2><p>Focused experiences for the people behind every class.</p></div>
   <div class="row g-3 role-grid">
-    <div class="col-md-4"><article class="role-card"><span class="role-number">01</span><div class="role-icon student-icon">S</div><h3>For students</h3><p>Review your attendance and keep track of your class history in one place.</p></article></div>
-    <div class="col-md-4"><article class="role-card"><span class="role-number">02</span><div class="role-icon faculty-icon">F</div><h3>For faculty</h3><p>Record class attendance and maintain a clear view of your sessions.</p></article></div>
-    <div class="col-md-4"><article class="role-card"><span class="role-number">03</span><div class="role-icon admin-icon">A</div><h3>For administrators</h3><p>Oversee users and the academic structure through a central workspace.</p></article></div>
+    <div class="col-md-4"><article class="role-card"><span class="role-number">01</span><div class="role-icon student-icon">S</div><h3>Student workspace</h3><p>See attendance, explore semester history and follow up on attendance concerns.</p><span class="role-link">Your academic progress <span>↗</span></span></article></div>
+    <div class="col-md-4"><article class="role-card"><span class="role-number">02</span><div class="role-icon faculty-icon">F</div><h3>Faculty workspace</h3><p>Manage teaching assignments, record class attendance and review student requests.</p><span class="role-link">Your teaching, organised <span>↗</span></span></article></div>
+    <div class="col-md-4"><article class="role-card"><span class="role-number">03</span><div class="role-icon admin-icon">A</div><h3>Administration</h3><p>Oversee people, academic structure and attendance activity from one place.</p><span class="role-link">A complete system view <span>↗</span></span></article></div>
   </div>
 </section>
+<section class="home-bottom-cta"><div><span class="eyebrow eyebrow-light">READY WHEN YOU ARE</span><h2>Bring your academic day into focus.</h2><p>Sign in to access your AttendX workspace.</p></div>{% if user.is_authenticated %}<a class="btn btn-light btn-lg" href="{% url 'dashboard' %}">Go to dashboard ↗</a>{% else %}<a class="btn btn-light btn-lg" href="{% url 'login' %}">Log in to AttendX ↗</a>{% endif %}</section>
 {% endblock %}
