@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.shortcuts import render
 from accounts.models import User
 from academics.models import AcademicBatch, Course, Department, Enrollment, FacultySubjectAssignment, StudentProfile, Subject, TimetableEntry
@@ -34,7 +34,7 @@ def dashboard(request):
                 "subjects": Enrollment.objects.filter(student=user, subject__semester=semester).select_related("subject", "subject__course"),
             })
         current_semester = profile.current_semester if profile else (semester_values[0] if semester_values else 1)
-        current_subjects = Enrollment.objects.filter(student=user, subject__semester=current_semester).select_related("subject", "subject__course").prefetch_related("subject__faculty_assignments__faculty")
+        current_subjects = Enrollment.objects.filter(student=user, subject__semester=current_semester).select_related("subject", "subject__course").prefetch_related("subject__faculty_assignments__faculty").annotate(total_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user)), present_classes=Count("subject__sessions__records", filter=Q(subject__sessions__status="COMPLETED", subject__sessions__records__student=user, subject__sessions__records__status="PRESENT")) )
         return render(request, "dashboards/student.html", {
             "total": total, "present": present,
             "absent": records.filter(status=AttendanceRecord.Status.ABSENT).count(),
@@ -47,7 +47,7 @@ def dashboard(request):
         })
     if user.role == User.Role.FACULTY and not user.is_superuser:
         assignments = FacultySubjectAssignment.objects.filter(faculty=user).select_related("subject__course__department")
-        subjects = Subject.objects.filter(Q(faculty_assignments__faculty=user) | Q(faculty=user)).distinct().select_related("course__department")
+        subjects = Subject.objects.filter(Q(faculty_assignments__faculty=user) | Q(faculty=user)).distinct().select_related("course__department").annotate(enrolled_students=Count("enrollments", distinct=True))
         sessions = ClassSession.objects.filter(Q(faculty=user) | Q(subject__faculty=user) | Q(subject__faculty_assignments__faculty=user)).distinct().select_related("subject", "subject__course")[:20]
         concerns = AttendanceConcern.objects.filter(
             Q(record__session__faculty=user) | Q(record__session__subject__faculty=user) | Q(record__session__subject__faculty_assignments__faculty=user)
