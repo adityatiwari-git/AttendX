@@ -8,6 +8,7 @@ class ClassSession(models.Model):
         CANCELLED = "CANCELLED", "Cancelled"
 
     subject = models.ForeignKey("academics.Subject", on_delete=models.PROTECT, related_name="sessions")
+    faculty = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="conducted_sessions", null=True, blank=True, limit_choices_to={"role": "FACULTY"})
     session_date = models.DateField()
     topic = models.CharField(max_length=200, blank=True)
     status = models.CharField(max_length=12, choices=Status.choices, default=Status.COMPLETED)
