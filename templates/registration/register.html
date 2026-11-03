@@ -2,11 +2,16 @@
 {% block title %}Create account | AttendX{% endblock %}
 {% block content %}
 <section class="auth-layout">
-  <div class="auth-aside"><span class="eyebrow eyebrow-light">GET STARTED</span><h1>A clearer view of <span>your attendance.</span></h1><p>Create your student account and keep your academic attendance information together.</p><div class="auth-aside-mark">A<span>X</span></div></div>
-  <div class="auth-card"><span class="auth-kicker">JOIN ATTENDX</span><h2>Create your account</h2><p class="auth-subtitle">A few details and you're ready to get started.</p>
+  <div class="auth-aside"><span class="eyebrow eyebrow-light">GET STARTED</span><h1>A clearer view of <span>your attendance.</span></h1><p>Join the AttendX academic workspace and keep your class attendance information organised.</p><div class="auth-aside-mark">A<span>X</span></div></div>
+  <div class="auth-card"><span class="auth-kicker">CHOOSE YOUR ACCESS</span><h2>Create an account</h2><p class="auth-subtitle">AttendX supports three workspaces. Account access is assigned securely.</p>
+    <div class="role-choice-list">
+      <div class="role-choice active"><span class="role-choice-icon">S</span><span><strong>Student</strong><small>Open registration</small></span><span class="role-choice-tag">Available</span></div>
+      <div class="role-choice locked"><span class="role-choice-icon">F</span><span><strong>Faculty member</strong><small>Account created by administrator</small></span><span class="role-choice-tag">Restricted</span></div>
+      <div class="role-choice locked"><span class="role-choice-icon">A</span><span><strong>Administrator</strong><small>Privileged account, assigned securely</small></span><span class="role-choice-tag">Restricted</span></div>
+    </div>
     <form method="post" class="auth-form">{% csrf_token %}{{ form.as_p }}<button class="btn btn-navy btn-lg w-100" type="submit">Create student account <span aria-hidden="true">→</span></button></form>
     <p class="auth-switch">Already registered? <a href="{% url 'login' %}">Log in</a></p>
-    <p class="auth-footnote">Public registration is currently for student accounts only.</p>
+    <p class="auth-footnote">Faculty and administrator accounts must be provisioned by an authorised administrator. Selecting a role cannot grant elevated access.</p>
   </div>
 </section>
 {% endblock %}
