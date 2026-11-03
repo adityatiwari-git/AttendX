@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.core.exceptions import PermissionDenied
 
 from .models import User
 
@@ -60,6 +61,11 @@ class AttendXUserAdmin(UserAdmin):
         if obj and obj.role == User.Role.ADMIN:
             return False
         return super().has_delete_permission(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        if queryset.filter(role=User.Role.ADMIN).exists():
+            raise PermissionDenied("The Master Admin account is protected from bulk deletion.")
+        return super().delete_queryset(request, queryset)
 
     def save_model(self, request, obj, form, change):
         if obj.role == User.Role.ADMIN:
