@@ -37,7 +37,8 @@ The project is being developed incrementally, with an emphasis on clear role sep
 - **Role-based accounts:** Student, Faculty, and Administrator roles using a custom Django user model.
 - **Authentication:** Django session-based login and logout.
 - **Student registration:** Public registration creates student accounts only; privileged roles cannot be self-assigned.
-- **College-wide academic structure:** Departments, programmes/courses, academic batches, student profiles, semester-specific subjects, enrollments, and weekly timetable entries.\n- **Multi-department faculty assignments:** A faculty member can be assigned to subjects across programmes and departments.\n- **Semester history:** Student dashboards present semester-wise attendance archives and current-semester subject enrolments.\n- **Faculty workspace:** Assigned subjects, cross-programme teaching schedule, class sessions, student registers, and attendance concerns.
+- **College-wide academic structure:** Departments, programmes/courses, academic batches, student profiles, semester-specific subjects, enrollments, and weekly timetable entries.
+- **Multi-department faculty assignments:** A faculty member can be assigned to subjects across programmes and departments.\n- **Semester history:** Student dashboards present semester-wise attendance archives and current-semester subject enrolments.\n- **Faculty workspace:** Assigned subjects, cross-programme teaching schedule, class sessions, student registers, and attendance concerns.
 - **Class sessions:** Faculty can create attendance sessions for subjects.
 - **Attendance records:** Present, Absent, and Late statuses, with a database constraint preventing duplicate records for the same student and session.
 - **Role-specific dashboards:** Separate dashboard views based on account role.
