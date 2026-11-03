@@ -1,7 +1,15 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
+
+
+class AttendXUserManager(UserManager):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        extra_fields["role"] = "ADMIN"
+        extra_fields["is_staff"] = True
+        extra_fields["is_superuser"] = True
+        return super().create_superuser(username, email, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -11,42 +19,24 @@ class User(AbstractUser):
         STUDENT = "STUDENT", "Student"
 
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.STUDENT)
+    objects = AttendXUserManager()
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(
-                fields=("role",),
-                condition=Q(role="ADMIN"),
-                name="accounts_single_master_admin",
-            )
+            models.UniqueConstraint(fields=("role",), condition=Q(role="ADMIN"), name="accounts_single_master_admin")
         ]
 
     def save(self, *args, **kwargs):
+        if self.pk:
+            previous = type(self).objects.filter(pk=self.pk).values("role").first()
+            if previous and previous["role"] == self.Role.ADMIN and self.role != self.Role.ADMIN:
+                raise ValidationError("The Master Admin role cannot be removed or changed.")
         if self.role == self.Role.ADMIN:
             self.is_staff = True
             self.is_superuser = True
-            self.is_active = True
-        else:
-            # No non-admin role may carry Django's privileged account flags.
-            self.is_staff = False
-            self.is_superuser = False
-
-        if self.pk:
-            previous = type(self).objects.filter(pk=self.pk).values(
-                "role", "is_staff", "is_superuser", "is_active"
-            ).first()
-            if previous and previous["role"] == self.Role.ADMIN:
-                protected_state = (
-                    self.role == self.Role.ADMIN
-                    and self.is_staff
-                    and self.is_superuser
-                    and self.is_active
-                )
-                if not protected_state:
-                    raise ValidationError(
-                        "The Master Admin account cannot be demoted, deactivated, or stripped of administrator privileges."
-                    )
-        return super().save(*args, **kwargs)
+        elif self.is_superuser:
+            raise ValidationError("Only the Master Admin account may be a superuser.")
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         if self.role == self.Role.ADMIN:
