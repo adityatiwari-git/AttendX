@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 
@@ -18,8 +19,10 @@ class Command(BaseCommand):
 
         email = input("Master Admin email (optional): ").strip()
         password = self._prompt_password()
-        if len(password) < 12:
-            raise CommandError("Use a password of at least 12 characters.")
+        try:
+            validate_password(password)
+        except Exception as exc:
+            raise CommandError(str(exc)) from exc
 
         user = User.objects.create_user(
             username=username,
