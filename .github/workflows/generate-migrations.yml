@@ -2,6 +2,11 @@ name: Generate Django migrations
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'attendx/settings.py'
+      - '.github/workflows/generate-migrations.yml'
 
 permissions:
   contents: write
