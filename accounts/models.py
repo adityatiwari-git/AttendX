@@ -4,7 +4,13 @@ from django.db import models
 from django.db.models import Q
 
 
-class AttendXUserManager(UserManager):
+class ProtectedUserQuerySet(models.QuerySet):
+    def delete(self):
+        # Bulk deletion must never remove the institutional Master Admin.
+        return self.exclude(role="ADMIN")._raw_delete(self.db), {}
+
+
+class AttendXUserManager(UserManager.from_queryset(ProtectedUserQuerySet)):
     def create_superuser(self, username, email=None, password=None, **extra_fields):
         extra_fields["role"] = "ADMIN"
         extra_fields["is_staff"] = True
