@@ -15,7 +15,9 @@ def home(request):
 def dashboard(request):
     user = request.user
     if user.role == User.Role.ADMIN:
-        return render(request, "dashboards/admin.html", {
+        if user.role != User.Role.ADMIN:
+        return HttpResponseForbidden("This account has no valid AttendX role. Contact the Master Admin.")
+    return render(request, "dashboards/admin.html", {
             "students": User.objects.filter(role=User.Role.STUDENT).count(),
             "faculty": User.objects.filter(role=User.Role.FACULTY).count(),
             "subjects": Subject.objects.count(),
