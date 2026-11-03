@@ -1,1 +1,27 @@
-{% extends 'base.html' %}{% block content %}<h1 class="h3">Student dashboard</h1><p>Welcome, {{ user.get_full_name|default:user.username }}.</p><div class="row g-3 mb-4"><div class="col-md-4"><div class="card metric p-3"><span>Attendance</span><strong class="display-6">{{ percentage }}%</strong></div></div><div class="col-md-4"><div class="card metric p-3"><span>Present</span><strong class="display-6">{{ present }}</strong></div></div><div class="col-md-4"><div class="card metric p-3"><span>Recorded classes</span><strong class="display-6">{{ total }}</strong></div></div></div><div class="card p-3"><h5>Recent attendance</h5><table class="table"><tr><th>Date</th><th>Subject</th><th>Status</th></tr>{% for r in recent %}<tr><td>{{ r.session.session_date }}</td><td>{{ r.session.subject.name }}</td><td>{{ r.get_status_display }}</td></tr>{% empty %}<tr><td colspan="3">No records yet.</td></tr>{% endfor %}</table></div>{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Student dashboard | AttendX{% endblock %}
+{% block content %}
+<div class="dashboard-heading"><div><span class="eyebrow">STUDENT WORKSPACE</span><h1 class="page-title">Good to see you, {{ user.get_short_name|default:user.username }}.</h1><p class="page-subtitle">Your attendance, class activity and requests—all in one place.</p></div><span class="dashboard-role">Student</span></div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="stat-card"><span>Attendance rate</span><strong>{{ percentage }}%</strong><small>Based on recorded classes</small></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><span>Present</span><strong>{{ present }}</strong><small>Classes attended</small></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><span>Absent</span><strong>{{ absent }}</strong><small>Review entries below</small></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><span>Requests open</span><strong>{{ open_concerns }}</strong><small>Awaiting faculty review</small></div></div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <section class="panel-card"><div class="panel-heading"><div><h2>Attendance history</h2><p>Your latest recorded classes</p></div><span class="panel-count">{{ total }} records</span></div>
+      <div class="table-responsive"><table class="table align-middle attendance-table"><thead><tr><th>Class date</th><th>Subject</th><th>Topic</th><th>Status</th><th>Action</th></tr></thead><tbody>
+      {% for r in recent %}<tr><td>{{ r.session.session_date|date:"d M Y" }}</td><td class="fw-semibold">{{ r.session.subject.name }}</td><td>{{ r.session.topic|default:"—" }}</td><td><span class="status-chip status-{{ r.status|lower }}">{{ r.get_status_display }}</span></td><td>{% if r.status == "ABSENT" %}<a class="table-action" href="{% url 'raise_attendance_concern' r.pk %}">Raise concern</a>{% else %}<span class="text-muted">—</span>{% endif %}</td></tr>
+      {% empty %}<tr><td colspan="5" class="empty-state">No attendance has been recorded yet. Your class history will appear here.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+  </div>
+  <div class="col-lg-4">
+    <section class="panel-card"><div class="panel-heading"><div><h2>Attendance requests</h2><p>Track concerns you've raised</p></div></div>
+      {% for c in concerns %}<div class="concern-item"><div class="d-flex justify-content-between gap-2"><strong>{{ c.record.session.subject.name }}</strong><span class="status-chip status-{{ c.status|lower }}">{{ c.get_status_display }}</span></div><small>{{ c.record.session.session_date|date:"d M Y" }}</small><p>{{ c.message|truncatechars:105 }}</p>{% if c.faculty_response %}<div class="faculty-reply"><b>Faculty response</b><br>{{ c.faculty_response }}</div>{% endif %}</div>{% empty %}<div class="empty-state">No concerns raised. If a class is marked absent incorrectly, use “Raise concern” in your attendance history.</div>{% endfor %}
+    </section>
+    <section class="info-card mt-3"><span class="info-icon">i</span><div><strong>Need an attendance correction?</strong><p>Open a concern against the specific absent class. Your faculty member can review and respond.</p></div></section>
+  </div>
+</div>
+{% endblock %}
